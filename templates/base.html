@@ -70,7 +70,7 @@
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">
-                        {% if request.session.language == 'uz' %}
+                        {% if request.session.language == '1' %}
                             UZ
                         {% else %}
                             RU
@@ -78,10 +78,10 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <button class="dropdown-item" type="button">
-                            {% if request.session.language == 'uz' %}
-                                <a style="color: black;" href="?language=ru">RU</a>
+                            {% if request.session.language == '1' %}
+                                <a style="color: black;" href="?language=2">RU</a>
                             {% else %}
-                                <a style="color: black;" href="?language=uz">UZ</a>
+                                <a style="color: black;" href="?language=1">UZ</a>
                             {% endif %}
                             </button>
                         </div>

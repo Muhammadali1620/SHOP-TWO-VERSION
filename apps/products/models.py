@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from apps.categories.models import MainCategory, SubCategory
 from django.core.exceptions import ValidationError
 from django.utils.translation import get_language
+from apps.general.services import normalize_text
 from apps.products.services import get_usd_price
 from math import ceil
 
@@ -34,6 +35,13 @@ class Product(models.Model):
     def get_long(self):
         return getattr(self, f'long_desc_{get_language()}')
     
+    def get_normalize_fields(self):
+        return ['title_uz', 'title_ru', 'short_desc_uz', 'short_desc_ru', 'long_desc_uz', 'long_desc_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
+    
     def get_category(self):
         return self.main_category or self.sub_category
 
@@ -59,6 +67,9 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='products/%Y/%m/%d/')
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ordering_number = models.PositiveSmallIntegerField()
+
+    def __str__(self):
+        return f'{self.product.title_uz} image'
 
     class Meta:
         unique_together = ('product', 'ordering_number')

@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from apps.general.validators import phone_validate
 from apps.categories.models import SubCategory
 from django.utils.translation import get_language
+from apps.general.services import normalize_text
 
 
 class SocialLink(models.Model):
@@ -13,6 +14,13 @@ class SocialLink(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def get_normalize_fields(self):
+        return ['name']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -21,8 +29,16 @@ class SocialLink(models.Model):
 class PaymentMethod(models.Model):
     name = models.CharField(max_length=35)
     slug = models.SlugField(max_length=35, unique=True)
+    logo = models.ImageField(upload_to="general/payment_method/logo/%Y/%m/%d", blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def get_normalize_fields(self):
+        return ['name']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -46,16 +62,38 @@ class General(models.Model):
     
     def get_desc(self):
         return getattr(self, f'desc_{get_language()}')
+    
+    def get_normalize_fields(self):
+        return ['address_uz', 'address_ru', 'desc_uz', 'desc_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
+
+
+    
+    def __str__(self):
+        return self.stor_name
 
 
 class Service(models.Model):
     title_uz = models.CharField(max_length=100)
-    title_ru = models.CharField(max_length=100)
+    title_ru = models.CharField(max_length=100, blank=True)
     slug = models.SlugField(max_length=100, unique=True)
     icon = models.ImageField(upload_to='general/service/icon/', blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_title(self):
+        return getattr(self, f'title_{get_language()}')
+    
+    def get_normalize_fields(self):
+        return ['title_uz', 'title_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title_uz
@@ -69,6 +107,16 @@ class Branch(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_title(self):
+        return getattr(self, f'title_{get_language()}')
+    
+    def get_normalize_fields(self):
+        return ['title_uz', 'title_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title_uz
@@ -85,22 +133,43 @@ class Banner(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def get_title(self):
+        return getattr(self, f'title_{get_language()}')
+
+    def get_desc(self):
+        return getattr(self, f'desc_{get_language()}')
+    
+    def get_normalize_fields(self):
+        return ['title_uz', 'title_ru', 'desc_uz', 'desc_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title_uz
 
 
 class Coupon(models.Model):
     title = models.CharField(max_length=100)
-    code = models.CharField(max_length=6, unique=True)
+    code = models.CharField(max_length=12, unique=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, help_text="So'mda yoki foizda kiriting!!!")
     amount_is_percent = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def get_normalize_fields(self):
+        return ['title']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        self.code = ''.join(self.code.split())
+        super().save(*args, **kwargs)
 
     def clean(self):
-        if self.amount_is_percent and not (1 <= self.amount <= 100):
-            raise ValidationError({'ammaut':'Invalid ammount [1- 100]'})
+        if self.amount_is_percent and not (1 <= self.amount < 100):
+            raise ValidationError({'amount':'Invalid ammount [1- 99]'})
 
     def __str__(self):
         return self.title

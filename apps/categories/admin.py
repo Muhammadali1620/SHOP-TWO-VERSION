@@ -19,14 +19,3 @@ class MainCategoryAdmin(admin.ModelAdmin):
     search_fields = ['name_uz','name_ru']
     search_help_text = f'Serch from fields({search_fields})'
     list_editable = ['name_uz', 'name_ru']
-
-
-@admin.register(SubCategory)
-class SubCategoryAdmin(admin.ModelAdmin):
-    list_display = ('main_category', 'name_uz', 'name_ru')
-    list_display_linsk = ('main_category')
-    list_filter = ['main_category']
-    search_fields = ['name_uz','name_ru']
-    search_help_text = f'Serch from fields({search_fields})'
-    prepopulated_fields = {'slug':['name_uz']}
-    list_editable = ['name_uz', 'name_ru']

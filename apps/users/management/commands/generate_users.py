@@ -8,7 +8,7 @@ class Command(BaseCommand):
         last = CustomUser.objects.all().order_by('-pk').first()
         users = [CustomUser(email=f'muhammadvalievmuhammadali{i}@gmail.com', 
                                  password=f'admin1620{i}')
-            for i in range(last.pk + 1 if last else 1, last.pk + 1002 if last else 1001)
+            for i in range(last.pk + 1 if last else 1, last.pk + 102 if last else 101)
         ]
         CustomUser.objects.bulk_create(users)
         self.stdout.write(self.style.SUCCESS(f'{CustomUser.objects.count()} users created'))

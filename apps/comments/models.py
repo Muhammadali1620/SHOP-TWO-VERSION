@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from apps.general.services import normalize_text
 from apps.users.models import CustomUser
 from apps.products.models import Product
 
@@ -14,6 +15,13 @@ class Comment(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def get_normalize_fields(self):
+        return ['message']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.name}:{self.message}'
+        return self.name

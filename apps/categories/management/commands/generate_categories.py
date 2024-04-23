@@ -9,7 +9,7 @@ class Command(BaseCommand):
         maincategory = [MainCategory(name_uz = f'Main category NO {i}', 
                          name_ru=f'Main category NO {i}. ru', 
                          slug=f'main-category-no-{i}')
-            for i in range(last.pk + 1 if last else 1, last.pk + 1002 if last else 1001)
+            for i in range(last.pk + 1 if last else 1, last.pk + 102 if last else 101)
         ]
         MainCategory.objects.bulk_create(maincategory)
         self.stdout.write(self.style.SUCCESS(f'{MainCategory.objects.count()} maincategory created')) 
@@ -18,7 +18,7 @@ class Command(BaseCommand):
                         name_uz=f'Sub category NO {i}', 
                         name_ru = f'Sub category NO {i}. ru', 
                         slug = f'sub-category-{main}-no-{i}')
-            for i in range(1, 6)
+            for i in range(1, 4)
             for main in MainCategory.objects.all()
         ]
         SubCategory.objects.bulk_create(subcategory)

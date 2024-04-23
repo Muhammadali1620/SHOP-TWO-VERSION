@@ -1,5 +1,17 @@
 from django.contrib import admin
+from apps.features.models import ProductFeature
 from apps.products.models import Product, ProductImage
+
+
+class ProductImageInlineAdmin(admin.TabularInline):
+    model = ProductImage
+    min_num = 1
+    max_num = 10
+
+
+class ProductFeatureInline(admin.TabularInline):
+    model = ProductFeature
+    min_num = 1
 
 
 @admin.register(Product)
@@ -13,8 +25,4 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['title_uz', 'title_ru', 'review_counts']
     search_help_text = f'Serch from fields({search_fields})'
     list_editable = ['title_uz', 'title_ru',]
-
-
-@admin.register(ProductImage)
-class ProductImageAdmin(admin.ModelAdmin):
-    list_display_linsk = ('product')
+    inlines = [ProductImageInlineAdmin, ProductFeatureInline]

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import get_language
+from apps.general.services import normalize_text
 
 
 class MainCategory(models.Model):
@@ -12,7 +13,15 @@ class MainCategory(models.Model):
     updated_at = models.DateTimeField(auto_now=True) 
 
     def get_title(self):
+        print(get_language())
         return getattr(self, f'name_{get_language()}')
+    
+    def get_normalize_fields(self):
+        return ['name_uz', 'name_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name_uz
@@ -29,6 +38,13 @@ class SubCategory(models.Model):
 
     def get_title(self):
         return getattr(self, f'name_{get_language()}')
+    
+    def get_normalize_fields(self):
+        return ['name_uz', 'name_ru']
+
+    def save(self, *args, **kwargs):
+        normalize_text(self)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.main_category}:{self.name_uz}'

@@ -10,7 +10,7 @@ class Command(BaseCommand):
                         name=f'Kimdur NO {i}', 
                         email=f'muhammadvalievmuhammadali{i}@gmail.com', 
                         message=f'message NO {i}', rating=5)
-            for i in range(1, 6)
+            for i in range(1, 4)
             for product in Product.objects.all()
         ]
         Comment.objects.bulk_create(objs)

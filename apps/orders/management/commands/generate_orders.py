@@ -23,14 +23,14 @@ class Command(BaseCommand):
                             region=f'region No {i}',
                             district=f'district No {i}',
                         )
-            for i in range(1, 6)
+            for i in range(1, 4)
             for user in CustomUser.objects.all()
         ]
         Order.objects.bulk_create(ordermodel)
         self.stdout.write(self.style.SUCCESS(f'{Order.objects.count()} ordermodel created'))
 
         orderproduct = [OrderProduct(product_feature_id=order.pk, counts=2, order_id=order.pk)
-            for i in range(1, 6)
+            for i in range(1, 4)
             for order in ProductFeature.objects.all()
         ]
         OrderProduct.objects.bulk_create(orderproduct)

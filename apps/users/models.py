@@ -24,7 +24,7 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
-        return self.get_full_name()
+        return self.email
     
     class Meta:
         ordering = ['-pk']
@@ -35,3 +35,6 @@ class UserAuthCode(models.Model):
     code = models.CharField(max_length=4)
 
     expire_at = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.email

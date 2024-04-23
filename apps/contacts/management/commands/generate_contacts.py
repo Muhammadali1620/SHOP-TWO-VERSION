@@ -10,7 +10,7 @@ class Command(BaseCommand):
                         email=f'email No {i}', 
                         title=f'title No {i}', 
                         message=f'message No {i}')
-            for i in range(last.pk + 1 if last else 1, last.pk + 1002 if last else 1001)
+            for i in range(last.pk + 1 if last else 1, last.pk + 102 if last else 101)
         ]
         Contact.objects.bulk_create(objs)
         self.stdout.write(self.style.SUCCESS(f'{Contact.objects.count()} contact created'))

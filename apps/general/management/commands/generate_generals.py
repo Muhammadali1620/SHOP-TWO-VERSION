@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
         banner = [
             Banner(sub_category_id=sub_category.pk, slug=f'slug-{sub_category.pk}-no-{i}', title_uz=f'title_uz No {i}', title_ru=f'title_uz No {i}', desc_uz=f'desc_uz No {i}', desc_ru=f'desc_ru No {i}')
-            for i in range(1, 6)
+            for i in range(1, 4)
             for sub_category in SubCategory.objects.all()
         ]
         Banner.objects.bulk_create(banner)
